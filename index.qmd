@@ -1,0 +1,226 @@
+---
+title: "M06 Reflection Essay – Advanced Data Wrangling"
+author: "Kevin Bachez"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2
+    number-sections: true
+    code-link: true
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+    theme: cosmo
+editor: visual
+execute:
+  freeze: auto
+  echo: true
+---
+
+# Introduction
+
+::: callout-note
+This reflection summarizes what I learned throughout Module 06 about RevealJS presentations and advanced data wrangling in R. This report combines written explanations with reproducible R code to demonstrate literate programming and professional reporting using Quarto.
+:::
+
+# RevealJS Presentation
+
+## RevealJS Capabilities and Comparison with PowerPoint
+
+> **Prompt:** In Step 1, you learned how to design stunning presentation slides with Quarto. What's your impression of the RevealJS presentation? Describe its capabilities as you learned from the presentations. What are its strengths and weaknesses compared with PowerPoint?
+
+Before this module, I primarily used Microsoft PowerPoint for presentations. Learning RevealJS introduced me to a different way of creating presentations because everything is written in Quarto using Markdown and R code. Instead of manually inserting charts or tables, RevealJS allows presentations to automatically generate outputs directly from the code. This makes presentations reproducible and much easier to update whenever the data changes.
+
+One of the features I liked most is that RevealJS presentations can be published as websites through GitHub Pages. This makes it easy to share presentations with classmates, instructors, or employers without sending PowerPoint files.
+
+Some strengths of RevealJS include:
+
+-   Professional web-based presentations
+-   Reproducible charts and tables
+-   Integration with R and Quarto
+-   Easy publishing through GitHub Pages
+-   Version control using Git
+
+Compared with Microsoft PowerPoint, RevealJS does have some weaknesses. It requires learning Markdown, Quarto, and basic coding, which can be challenging for beginners. Creating custom layouts or animations is also less intuitive than using PowerPoint's graphical interface.
+
+Overall, I believe RevealJS is an excellent tool for data analytics because it combines analysis, code, and presentation into one reproducible document.
+
+# My RevealJS Presentation
+
+## Published Presentation
+
+> **Prompt:** In Step 2, you were asked to create a RevealJS presentation. Provide a link to the presentation you published on the web. Add at least one reproducible chart or table in the presentation. Briefly describe what the presentation is about. What did you learn from the experience of the RevealJS presentation?
+
+### Presentation Link
+
+**GitHub Pages:**
+
+<https://kebachez.github.io/M06-RevealJS/#/title-slide>
+
+### Presentation Description
+
+My RevealJS presentation introduces the concepts of advanced data wrangling in R. The presentation explains why cleaning, transforming, and combining datasets are important before performing analysis. It also demonstrates how Quarto can generate reproducible outputs directly from R code.
+
+While creating the presentation, I included both a reproducible table and a reproducible chart generated from the `mtcars` dataset. Instead of manually creating visuals, the presentation automatically generates them whenever the document is rendered.
+
+Creating this presentation helped me become more comfortable using Quarto, RevealJS, GitHub, and GitHub Pages together. I also learned how reproducible presentations can save time because updates to the data automatically update every figure and table.
+
+# Example Reproducible Table
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: "Example table generated from the mtcars dataset"
+
+library(dplyr)
+library(gt)
+
+mtcars |>
+  slice(1:8) |>
+  select(mpg, cyl, hp) |>
+  gt()
+```
+
+As shown in @tbl-example, Quarto can generate professional tables directly from R code.
+
+# Example Reproducible Figure
+
+```{r}
+#| label: fig-mpg
+#| fig-cap: "Miles per gallon by number of cylinders"
+
+library(ggplot2)
+
+ggplot(
+  mtcars,
+  aes(x = factor(cyl), y = mpg)
+) +
+  geom_boxplot() +
+  labs(
+    x = "Number of Cylinders",
+    y = "Miles per Gallon",
+    title = "Fuel Efficiency by Engine Size"
+  )
+```
+
+Figure @fig-mpg shows that vehicles with fewer cylinders generally achieve better fuel efficiency than vehicles with larger engines.
+
+# Advanced Data Wrangling
+
+::: callout-important
+The following examples demonstrate three different categories of advanced data wrangling functions using reproducible R code.
+:::
+
+## Joining Data with left_join()
+
+> **Prompt:** Pick one function related to joining relational databases. Describe when to use it and provide one coding example together with its output.
+
+The `left_join()` function is used when combining two related datasets while keeping every observation from the first table. It is especially useful when information is stored across multiple relational tables.
+
+```{r}
+library(dplyr)
+
+students <- tibble(
+  id = c(1,2,3),
+  name = c("Alice","Bob","Charlie")
+)
+
+scores <- tibble(
+  id = c(1,2),
+  score = c(92,88)
+)
+
+left_join(students, scores, by = "id")
+```
+
+The output keeps all students from the original table while matching available scores. Charlie does not have a matching score, so the result contains an `NA` value.
+
+## Reshaping Data with pivot_longer()
+
+> **Prompt:** Pick another function from a different category. Describe when to use it and provide one coding example together with its output.
+
+The `pivot_longer()` function converts wide datasets into long format. Many visualization and statistical functions in R work better when data are organized in a long format.
+
+```{r}
+library(tidyr)
+
+sales <- tibble(
+  Product = c("A","B"),
+  Jan = c(20,30),
+  Feb = c(25,35)
+)
+
+pivot_longer(
+  sales,
+  cols = c(Jan, Feb),
+  names_to = "Month",
+  values_to = "Sales"
+)
+```
+
+The output combines multiple monthly columns into one Month column and one Sales column, making the data easier to analyze and visualize.
+
+## Separating Columns with separate_wider_delim()
+
+> **Prompt:** Pick another function from a different category. Describe when to use it and provide one coding example together with its output.
+
+The `separate_wider_delim()` function splits one variable into multiple variables using a specified delimiter. This is useful when imported datasets contain multiple pieces of information stored in one column.
+
+```{r}
+library(tidyr)
+
+people <- tibble(
+  Name = c(
+    "John Smith",
+    "Jane Doe"
+  )
+)
+
+people |>
+  separate_wider_delim(
+    Name,
+    delim = " ",
+    names = c("First", "Last")
+  )
+```
+
+The output separates the first and last names into individual variables, making the data easier to organize and analyze.
+
+# Learning Reflection
+
+## What I Learned
+
+Throughout this module, I learned that Quarto is much more than a tool for writing reports. It allows users to create reproducible presentations, professional HTML documents, and interactive reports using one workflow. I also gained valuable experience publishing projects through GitHub Pages, which is a useful skill for sharing work online.
+
+The advanced data wrangling functions introduced in this module showed me how important data preparation is before performing analysis. Learning how to join relational datasets, reshape tables, and clean variables will help me work with larger and more complex datasets in future projects.
+
+Although learning RevealJS and Quarto required more effort than creating a traditional PowerPoint presentation, I now understand why these tools are widely used in data science and analytics. They make reports more reproducible, organized, and professional.
+
+# Learning Highlights
+
+::: panel-tabset
+## RevealJS
+
+-   Interactive HTML presentations
+-   GitHub Pages publishing
+-   Reproducible reporting
+
+## Data Wrangling
+
+-   Joining relational datasets
+-   Reshaping data
+-   Cleaning variables
+
+## Professional Skills
+
+-   Literate programming
+-   Reproducible research
+-   GitHub workflow
+:::
+
+# Footnote
+
+Quarto allows code, narrative, tables, and figures to exist together in one reproducible document.[^1]
+
+[^1]: This reproducibility is one of Quarto's greatest advantages over traditional presentation software.
